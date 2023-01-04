@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 
 
-def mnist(data_path: str = "data/processed/", eval: bool = False):
+def mnist(data_path: str = "data/processed/", eval: bool = False,batch_size: int = 64):
     """Pytorch version of the mnist dataset
 
         returns a train and test loader"""
@@ -15,7 +15,7 @@ def mnist(data_path: str = "data/processed/", eval: bool = False):
 
         test = np.load(data_path + "test.npz")
     else:
-        test = np.load(data_path)
+        test = np.load(data_path + "example_images.npz")
 
     class Train_dataset(Dataset):
         def __init__(self):
@@ -30,7 +30,7 @@ def mnist(data_path: str = "data/processed/", eval: bool = False):
 
     if not eval:
         train_dataset = Train_dataset()
-        train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
     class Test_dataset(Dataset):
         def __init__(self):
@@ -44,7 +44,7 @@ def mnist(data_path: str = "data/processed/", eval: bool = False):
             return len(self.data)
 
     test_dataset = Test_dataset()
-    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
     if not eval:
         return train_loader, test_loader
     else:

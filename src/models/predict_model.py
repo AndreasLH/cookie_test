@@ -1,22 +1,34 @@
-import click
 import torch
+import hydra
+import logging
+import os
+from hydra.utils import get_original_cwd
+
+from omegaconf import OmegaConf
 
 from src.data.load_dataset import mnist
 from src.models.model import MyAwesomeModel
 
+log = logging.getLogger(__name__)
 
-@click.group()
-def cli():
-    pass
+@hydra.main(version_base=None, config_path="../../conf", config_name="config.yaml")
+def evaluate(cfg):
+    # log.info("Working directory : {}".format(os.getcwd()))
+    # log.info(f"configuration: \n{OmegaConf.to_yaml(cfg)}")
+    hparams_model = cfg.model.hparams
+    hparams_ex = cfg.experiment.hparams
 
+    dataset_path = hparams_model.dataset_path
+    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+    batch_size = hparams_ex.batch_size
+    x_dim  = hparams_model.x_dim
+    hidden_dim = hparams_model.hidden_dim
+    hidden_dim2 = hparams_model.hidden_dim2
+    latent_dim = hparams_model.latent_dim
 
-@click.command()
-@click.argument("model_checkpoint")
-@click.argument("data_path")
-def evaluate(model_checkpoint, data_path):
-    model_checkpoint = "models/checkpoint.pth"
-    print("Evaluating until hitting the ceiling")
-    print(model_checkpoint)
+    model_checkpoint =  get_original_cwd()+"/models/checkpoint.pth"
+    log.info("Evaluating until hitting the ceiling")
+    log.info(model_checkpoint)
 
     class Color:
         red = "\033[31m"
@@ -25,14 +37,14 @@ def evaluate(model_checkpoint, data_path):
     color = Color.green
     # evaluation logic here
     state_dict = torch.load(model_checkpoint)
-    _, test_set = mnist(data_path, eval=True)
-    model = MyAwesomeModel()
+    _, test_set = mnist(data_path = get_original_cwd()+"/data/interim/",eval=True, batch_size=batch_size)
+    model = MyAwesomeModel(x_dim, hidden_dim, hidden_dim2, latent_dim)
 
-    accuracy = test(model, test_set, state_dict)
+    accuracy = test(model.to(DEVICE), test_set, state_dict)
     if accuracy.item() * 100 < 85:
         color = Color.red
 
-    print(color, f"Accuracy: {accuracy.item()*100:.3f}%")
+    log.info(f"{color}Accuracy: {accuracy.item()*100:.3f}%")
 
 
 def test(model, test_set, state_dict):
@@ -45,6 +57,7 @@ def test(model, test_set, state_dict):
     Returns:
         accuracy (torch.Tensor): accuracy of the model
     """
+    # TODO: might get an error if the model is trained on gpu but inference is done on cpu
     model.load_state_dict(state_dict)
 
     with torch.no_grad():
@@ -61,7 +74,5 @@ def test(model, test_set, state_dict):
     return accuracy
 
 
-cli.add_command(evaluate)
-
 if __name__ == "__main__":
-    cli()
+    evaluate()

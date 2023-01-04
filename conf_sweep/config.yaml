@@ -1,0 +1,13 @@
+defaults:
+  - experiment: train_conf
+  - model: model_conf
+  - _self_
+
+
+
+hydra:
+  sweeper:
+    params:
+      experiment.hparams.lr: 1e-3,1e-4
+      experiment.hparams.batch_size: 32,64
+      experiment.hparams.epochs: 6,12,20

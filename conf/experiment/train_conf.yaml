@@ -1,0 +1,5 @@
+hparams:
+  batch_size: 64
+  lr: 1e-3
+  epochs: 6
+  seed: 0

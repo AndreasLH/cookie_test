@@ -72,3 +72,25 @@ to predict
 ```
 make evaluate
 ```
+
+to run experiments. This will sweep over parameters
+
+```
+make experiments
+```
+
+## Docker
+connect to remote
+```
+docker run --name experiment4 -v /${pwd}/models:/models/ trainer:latest train --epochs 2
+```
+
+for some reason this only works in powershell, like this
+```
+docker run --name experiment4 -v ${PWD}/models:/models/ trainer:latest train --epochs 2
+```
+
+prediction
+```
+docker run --name predict --rm -v ${PWD}/models/checkpoint.pth:/models/checkpoint.pth -v ${PWD}/data/interim/example_images.npz:/example_images.npz predict:latest evaluate models/checkpoint.pth data/interim/example_images.npz
+```

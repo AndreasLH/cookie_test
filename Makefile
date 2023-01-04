@@ -31,11 +31,15 @@ data: requirements
 
 ## Make train
 train:
-	$(PYTHON_INTERPRETER) src/models/train_model.py train
+	$(PYTHON_INTERPRETER) src/models/train_model.py hydra.job.chdir=True
+	
+## Make experiment
+experiment:
+	$(PYTHON_INTERPRETER) src/models/train_model.py hydra.job.chdir=True hydra.mode=MULTIRUN
 
-## Make train
+## Make evaluate
 evaluate:
-	$(PYTHON_INTERPRETER) src/models/predict_model.py evaluate models/checkpoint.pth data/interim/example_images.npz
+	$(PYTHON_INTERPRETER) src/models/predict_model.py hydra.job.chdir=True
 
 ## Delete all compiled Python files
 clean:

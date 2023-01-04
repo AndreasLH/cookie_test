@@ -1,0 +1,3 @@
+defaults:
+  - experiment: train_conf
+  - model: model_conf
