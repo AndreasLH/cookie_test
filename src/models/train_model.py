@@ -10,8 +10,10 @@ from src.models.model import MyAwesomeModel
 from torch import nn
 from tqdm import tqdm
 from hydra.utils import get_original_cwd
+import wandb as wa
 
 log = logging.getLogger(__name__)
+
 
 """
 call with python src/models/train_model.py hydra.job.chdir=True hydra.mode=MULTIRUN
@@ -19,7 +21,7 @@ call with python src/models/train_model.py hydra.job.chdir=True hydra.mode=MULTI
 from MLops_exercises/s2_organisation_and_version_control/cookie_test
 """
 
-@hydra.main(version_base=None, config_path="../../conf_sweep", config_name="config.yaml")
+@hydra.main(version_base=None, config_path="../../conf", config_name="config.yaml")
 def train(cfg):
     """main training function for the model, calls the subsequent training function"""
     log.info(f"configuration: \n{OmegaConf.to_yaml(cfg)}")
@@ -39,7 +41,11 @@ def train(cfg):
     epochs = hparams_ex.epochs
     torch.manual_seed(hparams_ex.seed)
 
-    model = MyAwesomeModel(x_dim, hidden_dim, hidden_dim2, latent_dim).to(DEVICE)
+    config = {"lr": lr, "batch_size": batch_size, "epochs": epochs, "seed": hparams_ex.seed, "hidden_dim": hidden_dim, "hidden_dim2": hidden_dim2, "latent_dim": latent_dim}
+    dropout_rate = hparams_model.dropout_rate
+    wa.init(project='MNIST_Cookie_test',config=config)
+
+    model = MyAwesomeModel(x_dim, hidden_dim, hidden_dim2, latent_dim,dropout_rate).to(DEVICE)
     train_set, _ = mnist(data_path=get_original_cwd()+dataset_path,batch_size=batch_size)
     criterion = nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
@@ -54,6 +60,7 @@ def train(cfg):
     plt.title("Training loss")
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
+    wa.log({"chart": plt})
     plt.savefig("loss.png", dpi=200)
 
 
@@ -84,7 +91,9 @@ def training(model, train_set, criterion, optimizer, epochs=5):
 
             running_loss += loss.item()
         pbar.set_postfix({"Training loss": running_loss / len(train_set)})
-        running_loss_l.append(running_loss / len(train_set))
+        e_loss = running_loss / len(train_set)
+        running_loss_l.append(e_loss)
+        wa.log({"Training loss": e_loss})
     return model, running_loss_l
 
 

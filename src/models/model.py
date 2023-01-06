@@ -3,7 +3,7 @@ from torch import nn
 
 
 class MyAwesomeModel(nn.Module):
-    def __init__(self, x_dim, hidden_dim, hidden_dim2, latent_dim):
+    def __init__(self, x_dim, hidden_dim, hidden_dim2, latent_dim,dropout_rate=0.2):
         super().__init__()
         self.fc1 = nn.Linear(x_dim, hidden_dim)
         self.fc2 = nn.Linear(hidden_dim, hidden_dim2)
@@ -11,7 +11,7 @@ class MyAwesomeModel(nn.Module):
         self.fc4 = nn.Linear(latent_dim, 10)
 
         # Dropout module with 0.2 drop probability
-        self.dropout = nn.Dropout(p=0.2)
+        self.dropout = nn.Dropout(p=dropout_rate)
 
     def forward(self, x):
         # make sure input tensor is flattened

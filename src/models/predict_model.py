@@ -2,6 +2,8 @@ import torch
 import hydra
 import logging
 import os
+import wandb
+import numpy as np
 from hydra.utils import get_original_cwd
 
 from omegaconf import OmegaConf
@@ -10,6 +12,7 @@ from src.data.load_dataset import mnist
 from src.models.model import MyAwesomeModel
 
 log = logging.getLogger(__name__)
+wandb.init(project='MNIST_Cookie_test')
 
 @hydra.main(version_base=None, config_path="../../conf", config_name="config.yaml")
 def evaluate(cfg):
@@ -37,7 +40,7 @@ def evaluate(cfg):
     color = Color.green
     # evaluation logic here
     state_dict = torch.load(model_checkpoint)
-    _, test_set = mnist(data_path = get_original_cwd()+"/data/interim/",eval=True, batch_size=batch_size)
+    _, test_set = mnist(data_path = get_original_cwd()+"/data/processed/",eval=False, batch_size=batch_size)
     model = MyAwesomeModel(x_dim, hidden_dim, hidden_dim2, latent_dim)
 
     accuracy = test(model.to(DEVICE), test_set, state_dict)
@@ -45,6 +48,8 @@ def evaluate(cfg):
         color = Color.red
 
     log.info(f"{color}Accuracy: {accuracy.item()*100:.3f}%")
+
+
 
 
 def test(model, test_set, state_dict):
@@ -60,17 +65,38 @@ def test(model, test_set, state_dict):
     # TODO: might get an error if the model is trained on gpu but inference is done on cpu
     model.load_state_dict(state_dict)
 
+    y_true = []
+    y_pred = []
+
     with torch.no_grad():
         model.eval()
         accuracy = 0
-        for images, labels in test_set:
+        for i, (images, labels) in enumerate(test_set):
+            batch_size = images.shape[0]
             log_ps = model(images)
             ps = torch.exp(log_ps)
             top_p, top_class = ps.topk(1, dim=1)
             equals = top_class == labels.view(*top_class.shape)
-            print("labels: \t", labels, "\n", "prediction: \t", top_class.flatten())
+            # print("labels: \t", labels, "\n", "prediction: \t", top_class.flatten())
             accuracy += torch.mean(equals.type(torch.FloatTensor))
+
+            y_true.append(list(labels.numpy()))
+            y_pred.append(list(top_class.flatten().numpy()))
+
+            # wandb.log({"pr": wandb.plot.pr_curve(labels.numpy(), top_class.flatten().numpy())})
         accuracy /= len(test_set)
+        def flatten_list(l):
+            return [item for sublist in l for item in sublist]
+        y_true = flatten_list(y_true)
+        y_pred = flatten_list(y_pred)
+        wandb.log({"accuracy": accuracy})
+        cm = wandb.plot.confusion_matrix(
+            y_true=np.array(y_true),
+            preds=np.array(y_pred),
+            class_names=list(range(10)))
+        
+        wandb.log({"conf_mat": cm})
+        
     return accuracy
 
 
