@@ -21,6 +21,7 @@ call with python src/models/train_model.py hydra.job.chdir=True hydra.mode=MULTI
 from MLops_exercises/s2_organisation_and_version_control/cookie_test
 """
 
+
 @hydra.main(version_base=None, config_path="../../conf", config_name="config.yaml")
 def train(cfg):
     """main training function for the model, calls the subsequent training function"""
@@ -33,7 +34,7 @@ def train(cfg):
     dataset_path = hparams_model.dataset_path
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     batch_size = hparams_ex.batch_size
-    x_dim  = hparams_model.x_dim
+    x_dim = hparams_model.x_dim
     hidden_dim = hparams_model.hidden_dim
     hidden_dim2 = hparams_model.hidden_dim2
     latent_dim = hparams_model.latent_dim
@@ -41,19 +42,21 @@ def train(cfg):
     epochs = hparams_ex.epochs
     torch.manual_seed(hparams_ex.seed)
 
-    config = {"lr": lr, "batch_size": batch_size, "epochs": epochs, "seed": hparams_ex.seed, "hidden_dim": hidden_dim, "hidden_dim2": hidden_dim2, "latent_dim": latent_dim}
+    config = {"lr": lr, "batch_size": batch_size, "epochs": epochs,
+              "seed": hparams_ex.seed, "hidden_dim": hidden_dim,
+              "hidden_dim2": hidden_dim2, "latent_dim": latent_dim}
     dropout_rate = hparams_model.dropout_rate
-    wa.init(project='MNIST_Cookie_test',config=config)
+    wa.init(project='MNIST_Cookie_test', config=config)
 
-    model = MyAwesomeModel(x_dim, hidden_dim, hidden_dim2, latent_dim,dropout_rate).to(DEVICE)
-    train_set, _ = mnist(data_path=get_original_cwd()+dataset_path,batch_size=batch_size)
+    model = MyAwesomeModel(x_dim, hidden_dim, hidden_dim2, latent_dim, dropout_rate).to(DEVICE)
+    train_set, _ = mnist(data_path=get_original_cwd() + dataset_path, batch_size=batch_size)
     criterion = nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     model_out, loss = training(model, train_set, criterion, optimizer, epochs=epochs)
     out_str = f"{os.getcwd()}/checkpoint.pth"
     torch.save(model_out.state_dict(), out_str)
-    log.info("saved to "+out_str)
+    log.info("saved to " + out_str)
 
     plt.figure(figsize=(10, 5))
     plt.plot(loss)
@@ -64,7 +67,7 @@ def train(cfg):
     plt.savefig("loss.png", dpi=200)
 
 
-def training(model, train_set, criterion, optimizer, epochs=5,log=True):
+def training(model, train_set, criterion, optimizer, epochs=5, log=True):
     """Training function for the model
 
     Args:

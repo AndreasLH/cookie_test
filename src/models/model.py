@@ -3,7 +3,7 @@ from torch import nn
 
 
 class MyAwesomeModel(nn.Module):
-    def __init__(self, x_dim=784, hidden_dim=256, hidden_dim2=128, latent_dim=64,dropout_rate=0.2):
+    def __init__(self, x_dim=784, hidden_dim=256, hidden_dim2=128, latent_dim=64, dropout_rate=0.2):
         super().__init__()
         self.fc1 = nn.Linear(x_dim, hidden_dim)
         self.fc2 = nn.Linear(hidden_dim, hidden_dim2)

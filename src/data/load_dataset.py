@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 
 
-def mnist(data_path: str = "data/processed/", eval: bool = False,batch_size: int = 64):
+def mnist(data_path: str = "data/processed/", eval: bool = False, batch_size: int = 64):
     """Pytorch version of the mnist dataset
 
         returns a train and test loader"""
