@@ -41,5 +41,5 @@ jobs:
         
     - name: run mypy
       run: |
-        mypy --install-types
+        python -m pip install types-Pillow types-PyYAML types-colorama types-google-cloud-ndb types-protobuf types-psutil types-requests types-setuptools types-six types-tabulate types-tqdm types-urllib3
         mypy src
