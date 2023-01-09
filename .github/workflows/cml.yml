@@ -4,7 +4,7 @@
    run:
      runs-on: [ubuntu-latest]
      steps:
-       - uses: actions/checkout@v2
+       - uses: actions/checkout@v3
        - uses: iterative/setup-cml@v1
        - name: Train model
          run: |
