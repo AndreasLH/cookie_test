@@ -2,6 +2,13 @@ ML ops integration exercises
 ==============================
 [![Run tests](https://github.com/AndreasLH/cookie_test/actions/workflows/tests.yml/badge.svg)](https://github.com/AndreasLH/cookie_test/actions/workflows/tests.yml)
 
+[![codecov](https://codecov.io/gh/AndreasLH/cookie_test/branch/master/graph/badge.svg?token=26VVCWLVOQ)](https://codecov.io/gh/AndreasLH/cookie_test)
+
+## Code coverage
+<center>
+<iframe src="https://codecov.io/gh/AndreasLH/cookie_test/branch/master/graphs/tree.svg?token=26VVCWLVOQ" title='cov'> </iframe>
+</center>
+
 
 Project Organization
 ------------
