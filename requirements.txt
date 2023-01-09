@@ -17,6 +17,7 @@ matplotlib
 tqdm
 hydra-core
 wandb
+dvc[gdrive]
 
 # backwards compatibility
 pathlib2
