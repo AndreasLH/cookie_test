@@ -5,13 +5,15 @@ from src.models.model import MyAwesomeModel
 from src.models.train_model import training
 import torch
 import numpy as np
+import pytest
+import os
 
 batch_size = 64
-train_loader, test_loader = mnist(data_path="data/processed/", batch_size=batch_size)
 model = MyAwesomeModel()
-
+data_path = "data/processed/"
+@pytest.mark.skipif(not os.path.exists(data_path), reason="Data files not found")
 def test_shape_in_out_model():
-    train_loader, _ = mnist(data_path="data/processed/",batch_size=batch_size)
+    train_loader, _ = mnist(data_path=data_path,batch_size=batch_size)
     criterion = torch.nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=3e-4)
 

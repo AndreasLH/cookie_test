@@ -7,7 +7,6 @@ import numpy as np
 import pytest
 
 batch_size = 64
-train_loader, test_loader = mnist(data_path="data/processed/", batch_size=batch_size)
 model = MyAwesomeModel()
 
 @pytest.mark.parametrize("test_input, expected", [(torch.randn(64,1,28,28), (64,10)),(torch.randn(1,1,28,28), (1,10)), pytest.param(torch.randn(64,1,26,26), (64,10), marks=pytest.mark.xfail)])

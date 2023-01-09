@@ -14,7 +14,8 @@ import pytest
 
 batch_size = 64
 data_path = "data/processed/"
-train_loader, test_loader = mnist(data_path=data_path, batch_size=batch_size)
+if os.path.exists(data_path):
+    train_loader, test_loader = mnist(data_path=data_path, batch_size=batch_size)
 
 N_train = 25000
 N_test = 5000

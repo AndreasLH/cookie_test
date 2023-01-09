@@ -16,6 +16,7 @@ numpy
 matplotlib
 tqdm
 hydra-core
+wandb
 
 # backwards compatibility
 pathlib2
