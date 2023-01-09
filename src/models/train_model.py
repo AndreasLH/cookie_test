@@ -64,7 +64,7 @@ def train(cfg):
     plt.savefig("loss.png", dpi=200)
 
 
-def training(model, train_set, criterion, optimizer, epochs=5):
+def training(model, train_set, criterion, optimizer, epochs=5,log=True):
     """Training function for the model
 
     Args:
@@ -93,7 +93,8 @@ def training(model, train_set, criterion, optimizer, epochs=5):
         pbar.set_postfix({"Training loss": running_loss / len(train_set)})
         e_loss = running_loss / len(train_set)
         running_loss_l.append(e_loss)
-        wa.log({"Training loss": e_loss})
+        if log:
+            wa.log({"Training loss": e_loss})
     return model, running_loss_l
 
 

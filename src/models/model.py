@@ -3,7 +3,7 @@ from torch import nn
 
 
 class MyAwesomeModel(nn.Module):
-    def __init__(self, x_dim, hidden_dim, hidden_dim2, latent_dim,dropout_rate=0.2):
+    def __init__(self, x_dim=784, hidden_dim=256, hidden_dim2=128, latent_dim=64,dropout_rate=0.2):
         super().__init__()
         self.fc1 = nn.Linear(x_dim, hidden_dim)
         self.fc2 = nn.Linear(hidden_dim, hidden_dim2)
@@ -14,6 +14,10 @@ class MyAwesomeModel(nn.Module):
         self.dropout = nn.Dropout(p=dropout_rate)
 
     def forward(self, x):
+        if x.ndim != 4:
+            raise ValueError('Expected input to a 4D tensor')
+        if x.shape[1] != 1 or x.shape[2] != 28 or x.shape[3] != 28:
+            raise ValueError('Expected each sample to have shape [1, 28, 28]')
         # make sure input tensor is flattened
         x = x.view(x.shape[0], -1)
 

@@ -10,8 +10,6 @@ def mnist(data_path: str = "data/processed/", eval: bool = False,batch_size: int
     # exchange with the corrupted mnist dataset
     if not eval:
         train = np.load(data_path + "train.npz")
-        images = train["images"]
-        labels = train["labels"]
 
         test = np.load(data_path + "test.npz")
     else:
@@ -19,14 +17,14 @@ def mnist(data_path: str = "data/processed/", eval: bool = False,batch_size: int
 
     class Train_dataset(Dataset):
         def __init__(self):
-            self.data = torch.from_numpy(images).view(-1, 1, 28, 28)
-            self.label = torch.from_numpy(labels)
+            self.data = torch.from_numpy(train["images"]).view(-1, 1, 28, 28)
+            self.label = torch.from_numpy(train["labels"])
 
         def __getitem__(self, index):
             return self.data[index].float(), self.label[index]
 
         def __len__(self):
-            return len(self.data)
+            return len(self.label)
 
     if not eval:
         train_dataset = Train_dataset()
@@ -41,7 +39,7 @@ def mnist(data_path: str = "data/processed/", eval: bool = False,batch_size: int
             return self.data[index].float(), self.label[index]
 
         def __len__(self):
-            return len(self.data)
+            return len(self.label)
 
     test_dataset = Test_dataset()
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)

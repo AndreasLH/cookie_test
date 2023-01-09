@@ -15,7 +15,7 @@ torchaudio
 numpy
 matplotlib
 tqdm
-hydra
+hydra-core
 
 # backwards compatibility
 pathlib2
