@@ -12,7 +12,6 @@ from tqdm import tqdm
 from hydra.utils import get_original_cwd
 from sklearn.metrics import (
     classification_report,
-    confusion_matrix,
     ConfusionMatrixDisplay,
 )
 
@@ -44,20 +43,20 @@ def train(cfg):
     hidden_dim = hparams_model.hidden_dim
     hidden_dim2 = hparams_model.hidden_dim2
     latent_dim = hparams_model.latent_dim
+    dropout_rate = hparams_model.dropout_rate
     lr = hparams_ex.lr
     epochs = hparams_ex.epochs
     torch.manual_seed(hparams_ex.seed)
 
-    config = {
-        "lr": lr,
-        "batch_size": batch_size,
-        "epochs": epochs,
-        "seed": hparams_ex.seed,
-        "hidden_dim": hidden_dim,
-        "hidden_dim2": hidden_dim2,
-        "latent_dim": latent_dim,
-    }
-    dropout_rate = hparams_model.dropout_rate
+    # config = {
+    #     "lr": lr,
+    #     "batch_size": batch_size,
+    #     "epochs": epochs,
+    #     "seed": hparams_ex.seed,
+    #     "hidden_dim": hidden_dim,
+    #     "hidden_dim2": hidden_dim2,
+    #     "latent_dim": latent_dim,
+    # }
     # wa.init(project='MNIST_Cookie_test', config=config)
 
     model = MyAwesomeModel(x_dim, hidden_dim, hidden_dim2, latent_dim, dropout_rate).to(
