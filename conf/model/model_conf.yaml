@@ -4,3 +4,4 @@ hparams:
   hidden_dim: 256
   hidden_dim2: 128
   latent_dim: 64
+  dropout_rate: 0.2
