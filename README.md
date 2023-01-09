@@ -1,7 +1,7 @@
-test_of_cookiecutter
+ML ops integration exercises
 ==============================
+[![Run tests](https://github.com/AndreasLH/cookie_test/actions/workflows/tests.yml/badge.svg)](https://github.com/AndreasLH/cookie_test/actions/workflows/tests.yml)
 
-A short project testing cookiecutter
 
 Project Organization
 ------------

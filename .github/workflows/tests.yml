@@ -31,7 +31,7 @@ jobs:
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
-        path: ${{ steps.pip-cache.outputs.dir }}
+        path: ${{ steps.pip-cache }}
         key: ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ matrix.os }}-py${{ matrix.python-version }}-pt
