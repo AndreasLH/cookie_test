@@ -26,15 +26,15 @@ jobs:
     - name: Get pip cache dir
       id: pip-cache
       run: |
-        echo "dir=pip cache dir" >> $GITHUB_OUTPUT
+        echo "::set-output name=dir::$(pip cache dir)"
 
-    - name: Cache dependencies
+    - name: pip cache
       uses: actions/cache@v3
       with:
-        path: ${{ steps.pip-cache }}
-        key: ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ hashFiles('**/requirements.txt') }}
+        path: ${{ steps.pip-cache.outputs.dir }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ matrix.os }}-py${{ matrix.python-version }}-pt
+          ${{ runner.os }}-pip-
 
     - name: Install dependencies
       run: |
