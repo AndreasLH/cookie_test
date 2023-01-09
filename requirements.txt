@@ -11,13 +11,14 @@ python-dotenv>=0.5.1
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch
 torchvision
-torchaudio 
+torchaudio
 numpy
 matplotlib
 tqdm
 hydra-core
 wandb
 dvc[gdrive]
+scikit-learn
 
 # backwards compatibility
 pathlib2
