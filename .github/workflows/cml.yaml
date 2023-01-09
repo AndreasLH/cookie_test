@@ -1,22 +1,33 @@
- name: train-my-model
- on: [push]
- jobs:
-   run:
-     runs-on: [ubuntu-latest]
-     steps:
-       - uses: actions/checkout@v3
-       - uses: iterative/setup-cml@v1
-       - name: Train model
-         run: |
-           python -m pip install --upgrade pip
-           pip install -r requirements.txt  # install dependencies
-           python src/models/train_model_cml.py hydra.job.chdir=True # run training
-       - name: Write report
-         env:
-           # this authenticates that the right permissions are in place
-           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         run: |
-           # send all information to report.md that will be reported to us when the workflow finish
-           cat classification_report.txt >> report.md
-           cml-publish confusion_matrix.png --md >> report.md
-           cml-send-comment report.md
+name: train-my-model
+on: [push]
+jobs:
+  run:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: iterative/setup-cml@v1
+      - name: Train model
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # install dependencies
+
+      - uses: iterative/setup-dvc@v1
+
+      - name: Get data
+        run: dvc pull
+        env:
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+
+      - name: run model
+        run: |
+          python src/models/train_model_cml.py hydra.job.chdir=True # run training
+
+      - name: Write report
+        env:
+          # this authenticates that the right permissions are in place
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # send all information to report.md that will be reported to us when the workflow finish
+          cat classification_report.txt >> report.md
+          cml-publish confusion_matrix.png --md >> report.md
+          cml-send-comment report.md
