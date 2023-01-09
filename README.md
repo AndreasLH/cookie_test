@@ -6,8 +6,16 @@ ML ops integration exercises
 
 ## Code coverage
 <center>
-<iframe src="https://codecov.io/gh/AndreasLH/cookie_test/branch/master/graphs/tree.svg?token=26VVCWLVOQ" title='cov'> </iframe>
+Grid
+
+<img src="https://codecov.io/gh/AndreasLH/cookie_test/branch/master/graphs/tree.svg?token=26VVCWLVOQ" alt="Flowers in Chania">
+
+Sunburst
+
+<img src="https://codecov.io/gh/AndreasLH/cookie_test/branch/master/graphs/sunburst.svg?token=26VVCWLVOQ" alt="Flowers in Chania">
+
 </center>
+
 
 
 Project Organization
