@@ -38,8 +38,11 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements_tests.txt
         pip install mypy
-        
+
+    - name: install mypy types
+      run: |
+          python -m pip install types-Pillow types-PyYAML types-colorama types-google-cloud-ndb types-protobuf types-psutil types-requests types-setuptools types-six types-tabulate types-tqdm types-urllib3
+
     - name: run mypy
       run: |
-        python -m pip install types-Pillow types-PyYAML types-colorama types-google-cloud-ndb types-protobuf types-psutil types-requests types-setuptools types-six types-tabulate types-tqdm types-urllib3
         mypy src
