@@ -1,4 +1,6 @@
 [core]
-    remote = storage
+    remote = remote_storage
 ['remote "storage"']
     url = gdrive://17c5LHk1VVJuXSN5KKTI2O5G6QXLmTcdT
+['remote "remote_storage"']
+    url = gs://mnist-data-alh/
