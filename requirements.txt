@@ -18,6 +18,7 @@ tqdm
 hydra-core
 wandb
 dvc[gdrive]
+dvc[gs]
 scikit-learn
 
 # backwards compatibility
